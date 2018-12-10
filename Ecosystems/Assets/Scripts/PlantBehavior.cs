@@ -138,7 +138,7 @@ public class PlantBehavior : MonoBehaviour {
             {
                 Vector3 pos = particles[i].position;
 
-                Instantiate(plantPrefab, pos, Quaternion.identity);
+                Instantiate(plantPrefab, pos, Quaternion.identity,GameObject.Find("Plants").transform);
                 Debug.Log("Reproduced");
                 yield break;
             }
