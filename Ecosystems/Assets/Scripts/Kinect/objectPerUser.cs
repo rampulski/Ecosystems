@@ -7,6 +7,7 @@ public class objectPerUser : MonoBehaviour {
 	public GameObject userObject;
 	public OpenNIUserTracker UserTracker;
 	Dictionary<int,GameObject> userObjMap = new Dictionary<int, GameObject>();
+    public float ratio;
 
     // Use this for initialization
 	void Start () {
@@ -27,8 +28,9 @@ public class objectPerUser : MonoBehaviour {
 			entry.Value.transform.localPosition = Vector3.Scale(scale,UserTracker.GetUserCenterOfMass(entry.Key));
 		}
 
-        scale = new Vector3(Camera.main.orthographicSize * 0.01f, Camera.main.orthographicSize * 0.01f, Camera.main.orthographicSize * 0.01f);
-	}
+        //scale = new Vector3(Camera.main.orthographicSize * ratio, Camera.main.orthographicSize * ratio, Camera.main.orthographicSize * ratio);
+        scale = new Vector3(ratio,ratio,ratio);
+    }
 
     void UserDetected(NewUserEventArgs e)
 	{
