@@ -27,7 +27,7 @@ public class objectPerUser : MonoBehaviour {
 			entry.Value.transform.localPosition = Vector3.Scale(scale,UserTracker.GetUserCenterOfMass(entry.Key));
 		}
 
-        scale = new Vector3(Camera.main.orthographicSize * 0.001f, Camera.main.orthographicSize * 0.001f, Camera.main.orthographicSize * 0.001f);
+        scale = new Vector3(Camera.main.orthographicSize * 0.01f, Camera.main.orthographicSize * 0.01f, Camera.main.orthographicSize * 0.01f);
 	}
 
     void UserDetected(NewUserEventArgs e)
