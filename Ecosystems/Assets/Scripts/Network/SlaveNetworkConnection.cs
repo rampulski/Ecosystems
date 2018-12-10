@@ -6,7 +6,8 @@ using UnityEngine.Networking;
 public class SlaveNetworkConnection : MonoBehaviour {
 
     public bool isAtStartup = true;
-    NetworkClient myClient;
+    public NetworkClient myClient;
+
     void Update()
     {
         if (isAtStartup)
@@ -24,10 +25,10 @@ public class SlaveNetworkConnection : MonoBehaviour {
         isAtStartup = false;
     }
 
-    // client function
     public void OnConnected(NetworkMessage netMsg)
     {
         Debug.Log("Connected to server");
     }
-
 }
+
+
