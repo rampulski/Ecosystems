@@ -7,6 +7,7 @@ public class AntsColonie : Species {
     public GameObject Ant;
     private Transform Ants;
     private Vector2 nestPos;
+    public float nestSize;
     private int generation;
     private float reproductionFactor;
     public float maxPopulation;
@@ -20,11 +21,14 @@ public class AntsColonie : Species {
         Decode(DNA);
         //
         nestPos = transform.position;
+        nestSize = 1;
+        transform.Find("Nest").transform.localScale = new Vector2(nestSize, nestSize);
+        //
         generation = 0;
         maxPopulation = 300.0f;
         //
         InvokeRepeating("Reproduce", 0, clock);
-
+        //
         tmp_reproRate = reproductionRate;
 
     }
@@ -82,6 +86,11 @@ public class AntsColonie : Species {
             Color.RGBToHSV(myColor, out H, out S, out V);
             H = Mathf.Clamp(H + Random.Range(-0.0400f, 0.0400f), 0.0f, 1.0f);
             myColor = Color.HSVToRGB(H, S, V);
+            // crazyness
+            craziness = Random.Range(1.0f,1.5f) * craziness;
+            //
+
+            // we encode unik dna
             current_dna = Encode();
         }
 
