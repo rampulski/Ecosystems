@@ -26,12 +26,14 @@ public class PlantBehavior : MonoBehaviour {
 
 
     private bool canUnHide;
+    private float timeToUnHide;
     private bool isHidden;
 
     public GameObject plantPrefab;
 
     [Range(0,100)]
     public int reproducingChancePercentage;
+    private float timeToHide;
 
     void Start () {
 
@@ -56,55 +58,42 @@ public class PlantBehavior : MonoBehaviour {
         }
 
         //Hide from player
-        if (Vector3.Distance(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition)) <= 20f)
-        {
-            Hide();
-            canUnHide = true;
-        }
-        else
-        {            
-            if (canUnHide)
-            {
-                StartCoroutine(UnHide());
-                canUnHide = false;
-            }
-        }
+        Hide();
     }
 
     private void Initialyze()
     {
         timeToBurst = 0f;
+        isHidden = true;
         canUnHide = true;
         maxSize = plantRenderer.localScale;
     }
 
     private void Hide()
     {
-        plantRenderer.localScale = Vector3.zero;
-        isHidden = true;
-    }
-
-    private IEnumerator UnHide()
-    {
-        float elapsedTime = 0f;
-        isHidden = false;
-        yield return new WaitForSeconds(1f);
-
-        while (elapsedTime <= 3f)
+        if (Vector3.Distance(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition)) <= 20f)
         {
-            plantRenderer.localScale = Vector3.Lerp(plantRenderer.localScale, maxSize, (elapsedTime / 3f));
-            elapsedTime += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
+            isHidden = true;
+            timeToHide -= Time.deltaTime * 4f;
         }
-        yield return null;
-    }
+        else
+        {
+            timeToHide += Time.deltaTime;
+        }
+        if (timeToHide >= 6f)
+        {
+            isHidden = false;
+        }
+        timeToHide = Mathf.Clamp(timeToHide, 0, 6f);
+        plantRenderer.localScale = Vector3.Slerp(Vector2.zero, maxSize, (timeToHide / 6f));
 
+    }
     public void Burst()
     {
         if (!isHidden)
         {
-            var sh = particlesSystem.shape;
-            sh.rotation = new Vector3(UnityEngine.Random.Range(0, 360), 0, 0);
+           //var sh = particlesSystem.shape;
+           //sh.rotation = new Vector3(UnityEngine.Random.Range(0, 360), 0, 0);
             particlesSystem.Play();
             timeToBurst = 0f;
 
@@ -127,7 +116,7 @@ public class PlantBehavior : MonoBehaviour {
     public IEnumerator Reproduce()
     {
         Debug.Log("Reproducing");
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(15f);
 
         var particles = new ParticleSystem.Particle[particlesCount];
         particlesSystem.GetParticles(particles);
