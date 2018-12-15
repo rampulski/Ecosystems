@@ -115,7 +115,7 @@ TrailRenderer:
   m_SortingLayerID: 1167840003
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Time: 120
+  m_Time: 30
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 1
@@ -195,10 +195,11 @@ MonoBehaviour:
   craziness: 0
   sociability: 0
   Ant: {fileID: 0}
-  nestSize: 0
   maxPopulation: 0
+  nestSize: 0
   mode: 0
   stopTime: 0
+  stopFreq: 0
 --- !u!212 &212495453650216336
 SpriteRenderer:
   m_ObjectHideFlags: 1

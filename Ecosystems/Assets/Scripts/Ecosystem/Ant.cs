@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Ant : AntsColonie {
+    float life;
     int orientation;
     float new_angle, new_speed;
     float minSpeed, maxSpeed;
@@ -10,34 +11,46 @@ public class Ant : AntsColonie {
     Vector2 goal;
     Vector3 goalVel;
     Vector2 vel;
-    int[] modes;
     public int mode;
-    public float stopTime;
+    public float stopDur, stopTimer, stopFreq;
 
     void Start () {
         DNA = transform.parent.parent.GetComponent<AntsColonie>().current_dna;
         Decode(DNA);
         MakeUnikDNA("ant");
-        // 
+        //
+        life = 0;
         transform.GetComponent<SpriteRenderer>().color = myColor;
         transform.localScale = new Vector3(size*0.2f,size*0.1f,1);
         transform.GetComponent<TrailRenderer>().widthMultiplier = size * 0.01f;
         //
-        modes = new int []{0,1,2,3,4,5};
-        mode = modes[0];
+        mode = 0;
         //
+        craziness = craziness * 5;
         baseCraziness = craziness;
+        speed = speed * 5;
         //
-        orientation = Random.Range(0, 1) * 2 - 1; // -1 or 1 --> where am I going ? (turn to left or right)
-        new_angle = Random.Range(0,360);
+        /* political */ orientation = Random.Range(0, 1) * 2 - 1; // -1 or 1 --> where am I going ? (turn to left or right)
+        StandardMove();
+        //
+        stopFreq = 30 * (1-temerity); // clock -> sec   temerity -> range 0-1
+        stopDur = 0;
+    }
+
+    // basic move function
+    private void StandardMove()
+    {
+        new_angle = Random.Range(0, 180);
         new_speed = speed * craziness * Random.Range(0.8f, 1.2f);
         vel = new Vector2(new_speed * Mathf.Cos(new_angle), new_speed * Mathf.Sin(new_angle));
-        goalVel = new Vector2(vel.x, vel.y);
     }
-	
-	// Update is called once per frame
-	void FixedUpdate ()
+
+    // Update is called once per frame
+    void FixedUpdate ()
     {
+        Vector3 lastPos = transform.position;
+        life += Time.deltaTime; // life duration in secondes
+
         switch (mode)
         {
             case 0:
@@ -69,11 +82,14 @@ public class Ant : AntsColonie {
 
         goalVel = new Vector2(vel.x, vel.y);
         Vector3 nextDir = transform.position + goalVel;
-
-        float angle = Mathf.Atan2(goalVel.y, goalVel.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(angle,Vector3.forward);
-
         transform.position = nextDir;
+
+        if (transform.position != lastPos)
+        {
+            float angle = Mathf.Atan2(goalVel.y, goalVel.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        }
+
 
     }
 
@@ -82,17 +98,21 @@ public class Ant : AntsColonie {
     // modal comportment
     void isSearching() // MODE 0
     {
+
+        stopTimer += Time.deltaTime;
         // ant is searching food around the world
         float pert_angle = Random.Range(0,360);
         float pert_speed = craziness * vel.magnitude * Random.Range(.05f, .1f);
         Vector2 pert = new Vector2(pert_speed * Mathf.Cos(pert_angle), pert_speed * Mathf.Sin(pert_angle));
+        //
         vel = vel+pert;
 
         // stop sometimes to re-orient randomly
-        if (Random.Range(0.000f, 1.000f) < 1 / craziness * 0.0025f)
+        if (stopTimer > stopFreq)
         {
-            vel = vel * 0;
-            stopTime = Mathf.Round(1 / craziness * Random.Range(1, 3) * clock);
+            vel = vel * 0; // we stp
+            stopDur = clock * Random.Range(0.2f,0.5f);
+            stopTimer = 0;
             mode = 5;
         }
 
@@ -120,13 +140,10 @@ public class Ant : AntsColonie {
 
     void stopped()  // MODE 5
     {
-        if (stopTime > 0)
-            stopTime -= 0.1f;
+        if (stopDur > 0) stopDur -= Time.deltaTime;
         else
         {
-            new_angle = Random.Range(0,360);
-            new_speed = speed * craziness * Random.Range(0.8f, 1.2f);
-            vel = new Vector2 (new_speed * Mathf.Cos(new_angle), new_speed * Mathf.Sin(new_angle));
+            StandardMove();
             mode = 0;
         }
     }
@@ -139,8 +156,8 @@ public class Ant : AntsColonie {
     //
     void normaliseSpeed()
     {
-        minSpeed = speed * craziness * Random.Range(0.5f, 0.8f);
-        maxSpeed = speed * craziness * Random.Range(1.2f, 1.5f);
+        minSpeed = speed * (craziness / 10) * Random.Range(0.5f, 0.8f);
+        maxSpeed = speed * (craziness / 10) * Random.Range(1.2f, 1.5f);
         Vector2 nVel = vel.normalized;
 
         if (mode != 2 && mode != 5)

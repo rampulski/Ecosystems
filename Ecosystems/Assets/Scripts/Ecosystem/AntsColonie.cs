@@ -7,17 +7,18 @@ public class AntsColonie : Species {
     public GameObject Ant;
     private Transform Ants;
     private Vector2 nestPos;
-    public float nestSize;
     private int generation;
-    private float reproductionFactor;
-    public float maxPopulation;
     private float babiesCount;
+    private float reproductionFactor;
+    [SerializeField]
+    private float maxPopulation, nestSize;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         Ants = transform.Find("Ants");
         //
-        DNA = "ATCTAGAGTGCTGGGGAAAAAAAAGGGGATGGAGACAGAGATCTATCTTGGG";
+        DNA = "ATCCAGAGTGCCGGGGAAAAAAAAGGGGAGAGAAATAGAGCAAACAAAGGGG";
+        current_dna = DNA;
         Decode(DNA);
         //
         nestPos = transform.position;
@@ -29,18 +30,71 @@ public class AntsColonie : Species {
         //
         InvokeRepeating("Reproduce", 0, clock);
         //
+        tmp_lifeTime = lifeTime;
         tmp_reproRate = reproductionRate;
-
+        tmp_clock = clock;
+        tmp_myColor = myColor;
+        tmp_speed = speed;
+        tmp_complexity = complexity;
+        tmp_size = size;
+        tmp_temerity = temerity;
+        tmp_craziness = craziness;
+        tmp_sociability = sociability;
     }
 	
 	// Update is called once per frame
 	void Update () {
         //Decode(species_dna);
 
+        if (Mathf.Abs(lifeTime - tmp_lifeTime) > 0.01f)
+        {
+            current_dna = Encode();
+            tmp_lifeTime = lifeTime;
+        }
         if (Mathf.Abs(reproductionRate - tmp_reproRate) > 0.01f)
         {
             current_dna = Encode();
             tmp_reproRate = reproductionRate;
+        }
+        if (Mathf.Abs(clock - tmp_clock) > 0.01f)
+        {
+            current_dna = Encode();
+            tmp_clock = clock;
+        }
+        if (myColor != tmp_myColor)
+        {
+            current_dna = Encode();
+            tmp_myColor = myColor;
+        }
+        if (Mathf.Abs(speed - tmp_speed) > 0.01f)
+        {
+            current_dna = Encode();
+            tmp_speed = speed;
+        }
+        if (Mathf.Abs(complexity - tmp_complexity) > 0.01f)
+        {
+            current_dna = Encode();
+            tmp_complexity = complexity;
+        }
+        if (Mathf.Abs(size - tmp_size) > 0.01f)
+        {
+            current_dna = Encode();
+            tmp_size = size;
+        }
+        if (Mathf.Abs(temerity - tmp_temerity) > 0.01f)
+        {
+            current_dna = Encode();
+            tmp_temerity = temerity;
+        }
+        if (Mathf.Abs(craziness - tmp_craziness) > 0.01f)
+        {
+            current_dna = Encode();
+            tmp_craziness = craziness;
+        }
+        if (Mathf.Abs(sociability - tmp_sociability) > 0.01f)
+        {
+            current_dna = Encode();
+            tmp_sociability = sociability;
         }
     }
 
@@ -50,7 +104,7 @@ public class AntsColonie : Species {
         reproductionFactor = Mathf.Clamp(((maxPopulation - Ants.childCount) / maxPopulation), 0.00f, 1.00f);
         babiesCount = 100 * reproductionFactor;
         //
-        MakeUnikDNA("queen");
+        //MakeUnikDNA("queen");
         //
         StartCoroutine("GiveBirth");
 
@@ -76,7 +130,6 @@ public class AntsColonie : Species {
             Color.RGBToHSV(myColor, out H, out S, out V);
             H = Mathf.Clamp(H + Random.Range(-0.0400f, 0.0400f), 0.0f, 1.0f);
             myColor = Color.HSVToRGB(H,S,V);
-            current_dna = Encode();
         }
         else {
             // size
@@ -87,12 +140,13 @@ public class AntsColonie : Species {
             H = Mathf.Clamp(H + Random.Range(-0.0400f, 0.0400f), 0.0f, 1.0f);
             myColor = Color.HSVToRGB(H, S, V);
             // crazyness
-            craziness = Random.Range(1.0f,1.5f) * craziness;
-            //
+            craziness = Random.Range(0.75f,1.25f) * craziness;
+            temerity = Random.Range(0.75f, 1.25f) * temerity;
+            clock = Mathf.RoundToInt(Random.Range(0.75f, 1.25f) * clock); // it will be "seconds" values
 
             // we encode unik dna
-            current_dna = Encode();
         }
+        current_dna = Encode();
 
     }
 }

@@ -12,7 +12,6 @@ public class Species : MonoBehaviour {
     //
     public int lifeTime;
     public float reproductionRate; 
-    protected float tmp_reproRate;
     public int clock;
     public Color myColor;
     public float speed;
@@ -21,6 +20,18 @@ public class Species : MonoBehaviour {
     public float temerity;
     public float craziness;
     public float sociability;
+
+    // protected to be modified
+    protected int tmp_lifeTime;
+    protected float tmp_reproRate;
+    protected int tmp_clock;
+    protected Color tmp_myColor;
+    protected float tmp_speed;
+    protected int tmp_complexity;
+    protected float tmp_size;
+    protected float tmp_temerity;
+    protected float tmp_craziness;
+    protected float tmp_sociability;
 
 
     protected string Encode ()
@@ -39,7 +50,7 @@ public class Species : MonoBehaviour {
         adn_table[8] = complexity;
         adn_table[9] = Mathf.RoundToInt(Map(size, 0, 10, 0, 255));
         adn_table[10] = Mathf.RoundToInt(Map(temerity, 0, 1, 0, 255));
-        adn_table[11] = Mathf.RoundToInt(Map(craziness, 0, 10, 0, 255));
+        adn_table[11] = Mathf.RoundToInt(Map(craziness, 0, 1, 0, 255));
         adn_table[12] = Mathf.RoundToInt(Map(sociability, 0, 1, 0, 255));
 
         // encode DNA string
@@ -106,7 +117,7 @@ public class Species : MonoBehaviour {
         size = Map(decodedDNA[9], 0, 255, 0, 10);
         // behaviours
         temerity = Map(decodedDNA[10], 0, 255, 0, 1);
-        craziness = Map(decodedDNA[11], 0, 255, 0, 10);
+        craziness = Map(decodedDNA[11], 0, 255, 0, 1);
         sociability = Map(decodedDNA[12], 0, 255, 0, 1);
 
     }
