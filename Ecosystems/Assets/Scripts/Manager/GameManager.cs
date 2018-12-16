@@ -13,7 +13,8 @@ public class GameManager : MonoBehaviour {
     public int plant_reproductionChance;
     [Range(1, 100)]
     public int plant_seedsPerBurstCount;
-
+    [Range(0.5f, 3f)]
+    public float plant_size;
 
 
     private void Awake()
