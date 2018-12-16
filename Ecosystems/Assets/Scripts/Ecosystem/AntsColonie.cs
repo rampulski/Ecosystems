@@ -6,7 +6,7 @@ public class AntsColonie : Species {
 
     public GameObject Ant;
     private Transform Ants;
-    private Vector2 nestPos;
+    public Vector2 nestPos;
     private int generation;
     private float babiesCount;
     private float reproductionFactor;
