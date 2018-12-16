@@ -114,7 +114,7 @@ public class AntsColonie : Species {
     {
         for (int i = 0; i < babiesCount; i++)
         {
-            Instantiate(Ant, Random.insideUnitCircle*3, Quaternion.identity, Ants);
+            Instantiate(Ant, Random.insideUnitCircle*1.5f + new Vector2 (transform.position.x, transform.position.y), Quaternion.identity, Ants);
             yield return new WaitForEndOfFrame();
         }
         yield return null;
