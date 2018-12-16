@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class PlantBehavior : Species {
+public class PlantBehavior : MonoBehaviour
+{
 
 
     public GameManager gameManager;
@@ -38,9 +40,11 @@ public class PlantBehavior : Species {
 
         plantRenderer = transform.Find("PlantRenderer");
         particlesSystem = transform.Find("Particles").GetComponent<ParticleSystem>();
-        particlesSystem.emission.SetBurst(0, new ParticleSystem.Burst(0f, gameManager.plant_seedsPerBurstCount));
         particlesTransform = transform.Find("Particles");
         particlesSystem.Stop();
+        color = plantRenderer.GetComponent<SpriteRenderer>().color;
+
+
 
         Initialyze();		
 	}
@@ -67,9 +71,19 @@ public class PlantBehavior : Species {
         isHidden = true;
         canUnHide = true;
         //set sizes
-        maxSize = plantRenderer.localScale;
+        maxSize = new Vector3 (gameManager.plant_size, gameManager.plant_size, 1);
+        particlesSystem.emission.SetBurst(0, new ParticleSystem.Burst(0f, gameManager.plant_seedsPerBurstCount));
         minSize = Vector3.zero;
         plantRenderer.localScale = minSize;
+        //color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
+
+        MakeUnique();
+    }
+
+    private void MakeUnique()
+    {
+        maxSize = maxSize * Random.Range(0.8f, 1.2f);
+        //plantRenderer.GetComponent<SpriteRenderer>().color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
     }
 
     private void Hide()
@@ -129,7 +143,7 @@ public class PlantBehavior : Species {
             {
                 Vector3 pos = particles[i].position;
 
-                Instantiate(plantPrefab, pos, Quaternion.identity,GameObject.Find("Plants").transform);
+                Instantiate(plantPrefab, pos, Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)), GameObject.Find("Plants").transform);
                 yield break;
             }
         }
