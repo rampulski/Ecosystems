@@ -157,7 +157,6 @@ public class Ant : AntsColonie {
     void EatFood() // MODE 2
     {
         stopTimer += Time.deltaTime;
-        lastDetectedPlant.GetComponentInParent<PlantBehavior>().Eat(1);
         // stop sometimes to re-orient randomly
         if (stopTimer > eatDur)
         {
@@ -275,6 +274,7 @@ public class Ant : AntsColonie {
         if (collision.collider.CompareTag("Plant"))
         {
             // touch a plant --> eat food mode
+            lastDetectedPlant.GetComponentInParent<PlantBehavior>().Eat(1);
             mode = 2;
         }
         else if (collision.collider.CompareTag("Ant"))
