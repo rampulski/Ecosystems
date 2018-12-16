@@ -21,7 +21,7 @@ public class FoodDetection : MonoBehaviour {
             //Debug.Log("FoodDetected");
 
         }
-        else if (collision.CompareTag("Obstacle"))
+        else if (collision.CompareTag("Obstacles"))
         {
             // get close to obstacle, need to re-orient
             parentScript.lastDetectedObstacle = collision;
