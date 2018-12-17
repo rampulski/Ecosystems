@@ -25,7 +25,7 @@ public class Ant : AntsColonie {
         //
         life = 0;
         transform.GetComponent<SpriteRenderer>().color = myColor;
-        transform.localScale = new Vector3(size*0.2f,size*0.1f,1);
+        transform.localScale *= size * 0.2f;
         transform.GetComponent<TrailRenderer>().widthMultiplier = size * 0.01f;
         //
         mode = 0;
@@ -162,10 +162,10 @@ public class Ant : AntsColonie {
         {
             vel = vel * 0; // we stp
             stopDur = clock * Random.Range(0.2f, 0.5f);
-            stopTimer = 0;
+            lastDetectedPlant.GetComponentInParent<PlantBehavior>().Eat(1);
             mode = 5;
             prevMode = 3; // go to "ReturnWithFood" mode avec collecting food !
-
+            stopTimer = 0;
         }
     }
 
@@ -263,7 +263,7 @@ public class Ant : AntsColonie {
         }
 
 
-        vel = vel * 0.001f; // normalized for Unity scale
+        vel = vel * 0.006f; // normalized for Unity scale
 
     }
 
@@ -274,7 +274,6 @@ public class Ant : AntsColonie {
         if (collision.collider.CompareTag("Plant"))
         {
             // touch a plant --> eat food mode
-            lastDetectedPlant.GetComponentInParent<PlantBehavior>().Eat(1);
             mode = 2;
         }
         else if (collision.collider.CompareTag("Ant"))

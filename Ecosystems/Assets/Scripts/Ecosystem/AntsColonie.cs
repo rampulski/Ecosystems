@@ -22,8 +22,8 @@ public class AntsColonie : Species {
         Decode(DNA);
         //
         nestPos = transform.position;
-        nestSize = 1;
-        transform.Find("Nest").transform.localScale = new Vector2(nestSize, nestSize);
+        //nestSize = 1;
+        //transform.Find("Nest").transform.localScale = new Vector2(nestSize, nestSize);
         //
         generation = 0;
         maxPopulation = 300.0f;
@@ -114,7 +114,7 @@ public class AntsColonie : Species {
     {
         for (int i = 0; i < babiesCount; i++)
         {
-            Instantiate(Ant, Random.insideUnitCircle*1.5f + new Vector2 (transform.position.x, transform.position.y), Quaternion.identity, Ants);
+            Instantiate(Ant, Random.insideUnitCircle*4.5f + new Vector2 (transform.position.x, transform.position.y), Quaternion.identity, Ants);
             yield return new WaitForEndOfFrame();
         }
         yield return null;
