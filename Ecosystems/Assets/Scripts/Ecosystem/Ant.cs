@@ -8,12 +8,13 @@ public class Ant : AntsColonie {
     float new_angle, new_speed;
     float minSpeed, maxSpeed;
     float baseCraziness;
-    Vector3 goalVel;
+    Vector3 goalVel, nest;
     Vector2 vel;
     public int mode, prevMode;
     public float stopDur, stopTimer, stopFreq, eatDur, meetingTime; // different time variables
-    public Collider2D lastDetectedPlant;
     public Collider2D lastDetectedObstacle;
+    private PlantBehavior plantToEat;
+    public Vector2 lastDetectedPlant;
     private SpriteRenderer foodBit;
     public Ant lastFriend;
     private Ant friend;
@@ -22,6 +23,8 @@ public class Ant : AntsColonie {
         DNA = transform.parent.parent.GetComponent<AntsColonie>().current_dna;
         Decode(DNA);
         MakeUnikDNA("ant");
+        //
+        nest = transform.parent.parent.GetComponent<AntsColonie>().nestPos;
         //
         life = 0;
         transform.GetComponent<SpriteRenderer>().color = myColor;
@@ -57,7 +60,7 @@ public class Ant : AntsColonie {
     private void MoveToTarget(Vector3 targetPos)
     {
         Vector3 dir = targetPos - transform.position;
-        vel = Vector3.MoveTowards(transform.position, dir, 10);
+        vel = Vector3.MoveTowards(transform.position, dir, 1);
     }
 
     // Update is called once per frame
@@ -141,8 +144,7 @@ public class Ant : AntsColonie {
     void DetectedFood () // MODE 1
     {
         //Debug.Log(collidedObject.name);
-        Vector2 foodGoal = lastDetectedPlant.transform.position;
-        MoveToTarget(foodGoal);
+        MoveToTarget(lastDetectedPlant);
 
         // pertubate the move a little
         float pert_angle = Random.Range(-45, 45);
@@ -162,16 +164,17 @@ public class Ant : AntsColonie {
         {
             vel = vel * 0; // we stp
             stopDur = clock * Random.Range(0.2f, 0.5f);
-            lastDetectedPlant.GetComponentInParent<PlantBehavior>().Eat(1);
+            if (plantToEat != null) plantToEat.Eat(1);
+            // go to "ReturnWithFood" mode avec collecting food !
+            prevMode = 3;
             mode = 5;
-            prevMode = 3; // go to "ReturnWithFood" mode avec collecting food !
+            // reset timer
             stopTimer = 0;
         }
     }
 
     void ReturnWithFood()  // MODE 3
     {
-        Vector3 nest = transform.parent.parent.GetComponent<AntsColonie>().nestPos;
         float nestDist = Vector3.Distance(nest,transform.position);
         //
         if (nestDist < 1)
@@ -274,6 +277,7 @@ public class Ant : AntsColonie {
         if (collision.collider.CompareTag("Plant"))
         {
             // touch a plant --> eat food mode
+            plantToEat = collision.collider.transform.gameObject.GetComponent<PlantBehavior>();
             mode = 2;
         }
         else if (collision.collider.CompareTag("Ant"))

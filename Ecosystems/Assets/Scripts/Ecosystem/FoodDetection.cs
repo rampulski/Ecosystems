@@ -16,7 +16,7 @@ public class FoodDetection : MonoBehaviour {
         if (collision.CompareTag("Plant") && (parentScript.mode == 0 || parentScript.mode == 4))
         {
             // ant is entering in the PlantTrigger object of a plant while searching for food           
-            parentScript.lastDetectedPlant = collision;
+            parentScript.lastDetectedPlant = collision.transform.position;
             parentScript.mode = 1;
             //Debug.Log("FoodDetected");
 
