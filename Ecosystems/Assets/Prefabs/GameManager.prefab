@@ -51,3 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d52f8990ec8d04eac4a7a5a5f3d53e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  plant_reproductionRate: 26.7
+  plant_reproductionChance: 8
+  plant_seedsPerBurstCount: 1
+  plant_size: 1.23
