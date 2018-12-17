@@ -11,6 +11,7 @@ public class PlantBehavior : MonoBehaviour
     public GameManager gameManager;
     public int foodQuantity;
 
+    public Vector3 maxSizeTemp;
     private Vector3 maxSize;
     private Vector3 minSize;
 
@@ -34,6 +35,9 @@ public class PlantBehavior : MonoBehaviour
 
     private float timeToHide;
 
+    public Animator anim;
+    private float foodQuantitymax;
+
     void Start () {
 
         gameManager = GameManager.instance;
@@ -42,6 +46,7 @@ public class PlantBehavior : MonoBehaviour
         particlesSystem = transform.Find("Particles").GetComponent<ParticleSystem>();
         particlesTransform = transform.Find("Particles");
         particlesSystem.Stop();
+        anim = plantRenderer.GetComponent<Animator>();
         color = plantRenderer.GetComponent<SpriteRenderer>().color;
 
 
@@ -71,10 +76,12 @@ public class PlantBehavior : MonoBehaviour
         isHidden = true;
         canUnHide = true;
         //set sizes
-        maxSize = new Vector3 (gameManager.plant_size, gameManager.plant_size, 1);
+        maxSizeTemp = new Vector3 (gameManager.plant_size, gameManager.plant_size, 1);
+        maxSize = maxSizeTemp;
         particlesSystem.emission.SetBurst(0, new ParticleSystem.Burst(0f, gameManager.plant_seedsPerBurstCount));
         minSize = Vector3.zero;
-        plantRenderer.localScale = minSize;
+        transform.localScale = minSize;
+        foodQuantitymax = foodQuantity;
         //color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
 
         MakeUnique();
@@ -82,7 +89,8 @@ public class PlantBehavior : MonoBehaviour
 
     private void MakeUnique()
     {
-        maxSize = maxSize * Random.Range(0.8f, 1.2f);
+        maxSizeTemp = maxSizeTemp * Random.Range(0.8f, 1.2f);
+        anim.speed = Random.Range(0.6f, 1.8f);
         //plantRenderer.GetComponent<SpriteRenderer>().color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f);
     }
 
@@ -102,7 +110,7 @@ public class PlantBehavior : MonoBehaviour
             isHidden = false;
         }
         timeToHide = Mathf.Clamp(timeToHide, 0, 6f);
-        plantRenderer.localScale = Vector3.Slerp(minSize, maxSize, (timeToHide / 6f));
+        transform.localScale = Vector3.Slerp(minSize, maxSizeTemp, (timeToHide / 6f));
 
     }
     public void Burst()
@@ -114,7 +122,7 @@ public class PlantBehavior : MonoBehaviour
             particlesSystem.Play();
             timeToBurst = 0f;
             
-            if (UnityEngine.Random.Range(0,100) <= gameManager.plant_reproductionChance)
+            if (Random.Range(0,100) <= gameManager.plant_reproductionChance)
             {
                 StartCoroutine(Reproduce());
 
@@ -124,15 +132,21 @@ public class PlantBehavior : MonoBehaviour
 
     public void Eat(int quantity)
     {
-        if (foodQuantity + quantity >= 0)
+        if (foodQuantity - quantity >= 0)
         {
             foodQuantity -= quantity;
+            float foodQuantityLerp = foodQuantity;
+            maxSizeTemp = Vector3.Lerp(Vector3.zero, maxSize, foodQuantityLerp / foodQuantitymax);
+        }
+        else
+        {
+            //Destroy(gameObject);
         }
     }
 
     public IEnumerator Reproduce()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
 
         var particles = new ParticleSystem.Particle[gameManager.plant_seedsPerBurstCount];
         particlesSystem.GetParticles(particles);
