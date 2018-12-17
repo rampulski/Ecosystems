@@ -128,8 +128,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1855618533673814}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.529999, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -4.73, y: 3.399, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 4486856232078984}
   - {fileID: 4503950607002322}
@@ -159,7 +159,7 @@ Transform:
   m_GameObject: {fileID: 1883085044841418}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4333948022898588}
   m_RootOrder: 1
@@ -178,7 +178,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 3.5
+  m_Radius: 1.5
 --- !u!58 &58285382052838402
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -193,7 +193,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.3
+  m_Radius: 0.7
 --- !u!95 &95995871471360154
 Animator:
   serializedVersion: 3
@@ -224,7 +224,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
-  foodQuantity: 120
+  foodQuantity: 100
+  maxSizeTemp: {x: 0, y: 0, z: 0}
   timeToBurst: 0
   particleSpeedTimer: 0
   color: {r: 0, g: 0, b: 0, a: 0}
@@ -233,6 +234,7 @@ MonoBehaviour:
   particlesTransform: {fileID: 0}
   particlesSystem: {fileID: 0}
   plantPrefab: {fileID: 1855618533673814}
+  anim: {fileID: 0}
 --- !u!198 &198074542157571406
 ParticleSystem:
   m_ObjectHideFlags: 1
