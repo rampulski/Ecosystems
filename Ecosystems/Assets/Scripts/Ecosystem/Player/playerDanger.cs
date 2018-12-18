@@ -14,7 +14,7 @@ public class playerDanger : MonoBehaviour {
 	void Start () {
 
         oldPos = transform.position;
-
+        dangerosity = 10;
         dangerosityMax = dangerosity;
     }
 	
@@ -26,7 +26,10 @@ public class playerDanger : MonoBehaviour {
             oldPos = transform.position;
         }
 
-
+        if (dangerosity <0)
+        {
+            dangerosity = 0;
+        }
         dangerosity -= Time.deltaTime;
 
 
