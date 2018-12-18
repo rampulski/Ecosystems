@@ -23,6 +23,8 @@ public class AllUnits : MonoBehaviour {
     [Range(0, 5)]
     public float maxVelocity;
 
+    private float timer;
+
     void Start () {
         units = new List<GameObject>();
 
@@ -37,5 +39,25 @@ public class AllUnits : MonoBehaviour {
 
         }
         range = new Vector3(5, 5, 5);
+    }
+
+    private void Update()
+    {
+
+
+        if (!seekgoal && !willfull && !obedient)
+        {
+            timer += Time.deltaTime;
+        }
+
+
+        if (timer >= 3f)
+        {
+            seekgoal = true;
+            willfull = true;
+            obedient = true;
+            timer = 0;
+        }
+
     }
 }
