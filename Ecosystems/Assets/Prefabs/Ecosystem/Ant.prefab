@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4251392527980376}
   - component: {fileID: 58566413792841246}
   - component: {fileID: 114406062454281408}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: trigger
   m_TagString: Ant
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 50094087460640564}
   - component: {fileID: 58330576135806650}
   - component: {fileID: 96225127920037860}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Ant
   m_TagString: Ant
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4255562803305380}
   - component: {fileID: 212898273251963534}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: foodBit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,8 +327,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1538673785
-  m_SortingLayer: 3
+  m_SortingLayerID: 1167840003
+  m_SortingLayer: 2
   m_SortingOrder: 1
   m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
