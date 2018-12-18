@@ -5,7 +5,7 @@ using UnityEngine;
 public class AllUnits : MonoBehaviour {
 
 
-    public GameObject[] units;
+    public List<GameObject> units;
     public GameObject unitPrefab;
     public int unitCount;
     public Vector3 range;
@@ -24,14 +24,16 @@ public class AllUnits : MonoBehaviour {
     public float maxVelocity;
 
     void Start () {
-        units = new GameObject[unitCount];
+        units = new List<GameObject>();
 
         for (int i = 0; i < unitCount; i++)
         {
             Vector3 unitPos = Random.insideUnitCircle;
-            units[i] = Instantiate(unitPrefab, this.transform.position + unitPos, Quaternion.identity, GameObject.Find("Butterflies").transform) as GameObject;
-            units[i].GetComponent<Unit>().manager = this.gameObject;
-            units[i].GetComponent<ButterflyBehavior>().manager = this.gameObject;
+            GameObject gO;
+            gO = Instantiate(unitPrefab, this.transform.position + unitPos, Quaternion.identity, GameObject.Find("Butterflies").transform) as GameObject;
+            gO.GetComponent<Unit>().manager = this.gameObject;
+            gO.GetComponent<ButterflyBehavior>().manager = this.gameObject;
+            units.Add(gO);
 
         }
         range = new Vector3(5, 5, 5);
