@@ -172,7 +172,7 @@ public class PlantBehavior : MonoBehaviour
     private void Death()
     {
         isDead = true;
-        GetComponentInChildren<CircleCollider2D>().enabled = false;
+        GetComponentsInChildren<CircleCollider2D>()[1].enabled = false;
         plantRenderer.GetComponent<SpriteRenderer>().color = Color.grey;
     }
 }
