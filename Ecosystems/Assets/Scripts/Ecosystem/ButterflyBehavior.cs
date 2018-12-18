@@ -55,6 +55,11 @@ public class ButterflyBehavior : MonoBehaviour {
    public void Death()
     {
         manager.GetComponent<AllUnits>().units.Remove(this.gameObject);
+        MoveManager();
+        manager.GetComponent<AllUnits>().obedient = false;
+        manager.GetComponent<AllUnits>().willfull = false;
+        manager.GetComponent<AllUnits>().seekgoal = false;
+
         Destroy(gameObject);
     }
 }
