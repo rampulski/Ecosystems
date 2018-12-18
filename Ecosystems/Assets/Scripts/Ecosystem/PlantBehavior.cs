@@ -37,7 +37,7 @@ public class PlantBehavior : MonoBehaviour
 
     public Animator anim;
     private float foodQuantitymax;
-    private bool isDead;
+    public bool isDead;
 
     void Start () {
 
