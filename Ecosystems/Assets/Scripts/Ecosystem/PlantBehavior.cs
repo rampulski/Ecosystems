@@ -37,6 +37,7 @@ public class PlantBehavior : MonoBehaviour
 
     public Animator anim;
     private float foodQuantitymax;
+    private bool isDead;
 
     void Start () {
 
@@ -60,13 +61,16 @@ public class PlantBehavior : MonoBehaviour
         //Burst Freq
         timeToBurst += Time.deltaTime;
 
-        if (timeToBurst >= gameManager.plant_reproductionRate)
+        if (!isDead)
         {
+            if (timeToBurst >= gameManager.plant_reproductionRate)
+            {
             Burst();
-        }
+            }
 
         //Hide from player
-        Hide();
+            Hide();
+        }     
     }
 
     private void Initialyze()
@@ -136,11 +140,11 @@ public class PlantBehavior : MonoBehaviour
         {
             foodQuantity -= quantity;
             float foodQuantityLerp = foodQuantity;
-            maxSizeTemp = Vector3.Lerp(Vector3.zero, maxSize, foodQuantityLerp / foodQuantitymax);
+            maxSizeTemp = Vector3.Lerp(Vector3.one * 0.4f, maxSize, foodQuantityLerp / foodQuantitymax);
         }
         else
         {
-            //Destroy(gameObject);
+            Death();
         }
     }
 
@@ -163,5 +167,12 @@ public class PlantBehavior : MonoBehaviour
         }
 
         yield return null;
+    }
+
+    private void Death()
+    {
+        isDead = true;
+        GetComponentInChildren<CircleCollider2D>().enabled = false;
+        plantRenderer.GetComponent<SpriteRenderer>().color = Color.grey;
     }
 }
