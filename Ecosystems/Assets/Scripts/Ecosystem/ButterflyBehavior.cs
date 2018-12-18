@@ -34,7 +34,7 @@ public class ButterflyBehavior : MonoBehaviour {
 
     void Hide()
     {
-        rndr.color = new Color(rndr.color.r, rndr.color.g, rndr.color.b, 0);
+        rndr.color = new Color(rndr.color.r, rndr.color.g, rndr.color.b, 0.01f);
         isHidden = true;
     }
 
@@ -50,5 +50,11 @@ public class ButterflyBehavior : MonoBehaviour {
         pos = Camera.main.ViewportToWorldPoint(pos);
         manager.transform.position = pos;
         canMoveManager = false;
+    }
+
+   public void Death()
+    {
+        manager.GetComponent<AllUnits>().units.Remove(this.gameObject);
+        Destroy(gameObject);
     }
 }
