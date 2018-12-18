@@ -7,9 +7,9 @@ using Random = UnityEngine.Random;
 public class PlantBehavior : MonoBehaviour
 {
 
-
     public GameManager gameManager;
     public int foodQuantity;
+    private Transform player;
 
     public Vector3 maxSizeTemp;
     private Vector3 maxSize;
@@ -41,7 +41,7 @@ public class PlantBehavior : MonoBehaviour
     void Start () {
 
         gameManager = GameManager.instance;
-
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         plantRenderer = transform.Find("PlantRenderer");
         particlesSystem = transform.Find("Particles").GetComponent<ParticleSystem>();
         particlesTransform = transform.Find("Particles");
@@ -96,7 +96,7 @@ public class PlantBehavior : MonoBehaviour
 
     private void Hide()
     {
-        if (Vector3.Distance(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition)) <= 10f)
+        if (Vector3.Distance(transform.position, player.transform.position) <= 10f && player.GetComponent<playerDanger>().dangerosity > 0)
         {
             isHidden = true;
             timeToHide -= Time.deltaTime * 4f;
