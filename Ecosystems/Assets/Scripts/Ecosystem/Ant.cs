@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Ant : AntsColonie {
     float life;
-    int orientation;
+    int orientation, friendsToHelp;
     float new_angle, new_speed;
     float minSpeed, maxSpeed;
     float baseCraziness;
@@ -47,12 +47,14 @@ public class Ant : AntsColonie {
         //
         foodBit = transform.Find("foodBit").gameObject.GetComponent<SpriteRenderer>();
         foodBit.transform.localScale = new Vector2(0, 0);
+        //
+        friendsToHelp = 3;
     }
 
     // basic move functions
     private void StandardMove()
     {
-        new_angle = Random.Range(0, 180);
+        new_angle = Random.Range(0, 270);
         new_speed = speed * craziness * Random.Range(0.8f, 1.2f);
         vel = new Vector2(new_speed * Mathf.Cos(new_angle), new_speed * Mathf.Sin(new_angle));
     }
@@ -60,9 +62,17 @@ public class Ant : AntsColonie {
     private void MoveToTarget(Vector3 targetPos)
     {
         Vector3 dir = targetPos - transform.position;
-        vel = Vector3.MoveTowards(transform.position, dir, 1);
+        float dist = Vector2.Distance(transform.position, targetPos);
+        vel = dir.normalized * (minSpeed + (maxSpeed - minSpeed) * dist);
     }
-
+    private void AddPerturbation ()
+    {
+        float pert_angle = Random.Range(0, 180);
+        float pert_speed = craziness * vel.magnitude * Random.Range(.05f, .1f);
+        Vector2 pert = new Vector2(pert_speed * Mathf.Cos(pert_angle), pert_speed * Mathf.Sin(pert_angle));
+        //
+        vel = vel + pert;
+    }
     // Update is called once per frame
     void FixedUpdate ()
     {
@@ -107,8 +117,7 @@ public class Ant : AntsColonie {
         NormaliseSpeed();
 
         goalVel = new Vector2(vel.x, vel.y);
-        Vector3 nextDir = transform.position + goalVel;
-        transform.position = nextDir;
+        transform.position += goalVel;
 
         if (transform.position != lastPos)
         {
@@ -121,14 +130,7 @@ public class Ant : AntsColonie {
     void IsSearching() // MODE 0
     {
         stopTimer += Time.deltaTime;
-
-        // ant is searching food around the world
-        float pert_angle = Random.Range(0, 360);
-        float pert_speed = craziness * vel.magnitude * Random.Range(.05f, .1f);
-        Vector2 pert = new Vector2(pert_speed * Mathf.Cos(pert_angle), pert_speed * Mathf.Sin(pert_angle));
-        //
-        vel = vel + pert;
-
+        AddPerturbation();
         // stop sometimes to re-orient randomly
         if (stopTimer > stopFreq)
         {
@@ -145,15 +147,7 @@ public class Ant : AntsColonie {
     {
         //Debug.Log(collidedObject.name);
         MoveToTarget(lastDetectedPlant);
-
-        // pertubate the move a little
-        float pert_angle = Random.Range(-45, 45);
-        float pert_speed = craziness * vel.magnitude * Random.Range(.05f, .1f);
-        Vector2 pert = new Vector2(pert_speed * Mathf.Cos(pert_angle), pert_speed * Mathf.Sin(pert_angle));
-
-        // update vel
-        vel = vel + pert;
-
+        AddPerturbation();
     }
 
     void EatFood() // MODE 2
@@ -164,12 +158,21 @@ public class Ant : AntsColonie {
         {
             vel = vel * 0; // we stp
             stopDur = clock * Random.Range(0.2f, 0.5f);
-            if (plantToEat != null) plantToEat.Eat(1);
-            // go to "ReturnWithFood" mode avec collecting food !
-            prevMode = 3;
-            mode = 5;
-            // reset timer
-            stopTimer = 0;
+            if (plantToEat.foodQuantity > 1)
+            {
+                plantToEat.Eat(1);
+                // go to "ReturnWithFood" mode avec collecting food !
+                prevMode = 3;
+                mode = 5;
+                // reset timer
+                stopTimer = 0;
+            }
+            else
+            {
+                plantToEat = null;
+                prevMode = 2;
+                mode = 0;
+            }
         }
     }
 
@@ -180,15 +183,13 @@ public class Ant : AntsColonie {
         if (nestDist < 1)
         {
             mode = 1;
+            friendsToHelp = 3;
         }
         else
         {
             MoveToTarget(nest);
             // pertubate the move a little
-            float pert_angle = Random.Range(-45,45);
-            float pert_speed = craziness * vel.magnitude * Random.Range(.05f, .1f);
-            Vector2 pert = new Vector2(pert_speed * Mathf.Cos(pert_angle), pert_speed * Mathf.Sin(pert_angle));
-            vel = vel + pert;
+            AddPerturbation();
         }
     }
 
@@ -243,6 +244,9 @@ public class Ant : AntsColonie {
     {
         Vector2 obsPos = lastDetectedObstacle.transform.position;
         float obsDist = Vector2.Distance(obsPos,transform.position);
+        // how to avoid obstacle
+        // turn right or left with an angle * inverse squared of the distance
+
 
     }
 
@@ -253,18 +257,8 @@ public class Ant : AntsColonie {
         maxSpeed = speed * (craziness / 10) * Random.Range(1.2f, 1.5f);
         Vector2 nVel = vel.normalized;
 
-        switch (mode)
-        {
-            case 0:
-                if (vel.magnitude > maxSpeed) vel = nVel * maxSpeed;
-                if (vel.magnitude < minSpeed) vel = nVel * minSpeed;
-                break;
-            case 1:
-                if (vel.magnitude > 1.5 * maxSpeed) vel = nVel * (1.5f * maxSpeed);
-                if (vel.magnitude < 1.5 * minSpeed) vel = nVel * (1.5f * minSpeed);
-                break;
-        }
-
+        if (vel.magnitude > maxSpeed) vel = nVel * maxSpeed;
+        if (vel.magnitude < minSpeed) vel = nVel * minSpeed;
 
         vel = vel * 0.006f; // normalized for Unity scale
 
@@ -284,12 +278,13 @@ public class Ant : AntsColonie {
         {
             // ant has food
             friend = collision.collider.transform.gameObject.GetComponent<Ant>();
-            if (mode == 3 && friend != lastFriend && (friend.mode == 0 || friend.mode == 4))
+            if (mode == 3 && friend != lastFriend && (friend.mode == 0 || friend.mode == 4) && friendsToHelp > 0)
             {
                 // friend do not has food, friend is searching for food, friend is not last friend met
                 // we pass ONCE to friend our last visited plant's position
                 friend.lastDetectedPlant = lastDetectedPlant; 
                 friend.mode = 61;
+                friendsToHelp--;
                 prevMode = mode;
                 mode = 6;
             }
