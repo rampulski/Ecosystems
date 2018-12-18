@@ -154,12 +154,13 @@ public class Ant : AntsColonie {
     {
         stopTimer += Time.deltaTime;
         // stop sometimes to re-orient randomly
-        if (stopTimer > eatDur)
+        if (plantToEat.foodQuantity > 0)
         {
-            vel = vel * 0; // we stp
-            stopDur = clock * Random.Range(0.2f, 0.5f);
-            if (plantToEat.foodQuantity > 1)
+            if (stopTimer > eatDur)
             {
+                vel = vel * 0; // we stp
+                stopDur = clock * Random.Range(0.2f, 0.5f);
+
                 plantToEat.Eat(1);
                 // go to "ReturnWithFood" mode avec collecting food !
                 prevMode = 3;
@@ -167,12 +168,12 @@ public class Ant : AntsColonie {
                 // reset timer
                 stopTimer = 0;
             }
-            else
-            {
-                plantToEat = null;
-                prevMode = 2;
-                mode = 0;
-            }
+        }
+        else
+        {
+            plantToEat = null;
+            prevMode = 2;
+            mode = 0;
         }
     }
 
