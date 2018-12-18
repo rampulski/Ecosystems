@@ -20,11 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4937673233863862}
   - component: {fileID: 212461207097218090}
-  - component: {fileID: 114051076819476400}
-  - component: {fileID: 114189069196064804}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: PlayerRenderer
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -38,10 +36,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4500081079733776}
   - component: {fileID: 33640870115545410}
-  - component: {fileID: 135414560747507854}
-  m_Layer: 0
+  - component: {fileID: 58979235513713306}
+  - component: {fileID: 114963743020595304}
+  - component: {fileID: 114620592356424692}
+  m_Layer: 11
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -56,13 +56,13 @@ GameObject:
   - component: {fileID: 4460085884504712}
   - component: {fileID: 198600551030103616}
   - component: {fileID: 199015994673364424}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4460085884504712
 Transform:
   m_ObjectHideFlags: 1
@@ -83,8 +83,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1363916354677394}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 2.19, y: 0, z: 0}
+  m_LocalScale: {x: 10, y: 10, z: 1}
   m_Children:
   - {fileID: 4937673233863862}
   m_Father: {fileID: 0}
@@ -96,14 +96,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1059063175996172}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 20, y: 20, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4460085884504712}
   m_Father: {fileID: 4500081079733776}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33640870115545410
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -111,41 +111,44 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1363916354677394}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114051076819476400
+--- !u!58 &58979235513713306
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1363916354677394}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.1
+--- !u!114 &114620592356424692
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1059063175996172}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5d67da87e37e81469150b4025603947, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114189069196064804
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1059063175996172}
+  m_GameObject: {fileID: 1363916354677394}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb5d7e26ef0bb4a4185d3b75db55655f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dangerosity: 100
---- !u!135 &135414560747507854
-SphereCollider:
+  dangerosity: 0
+--- !u!114 &114963743020595304
+MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1363916354677394}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5d67da87e37e81469150b4025603947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!198 &198600551030103616
 ParticleSystem:
   m_ObjectHideFlags: 1
